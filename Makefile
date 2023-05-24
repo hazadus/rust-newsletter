@@ -9,3 +9,6 @@ fmt:
 test:
 	make fmt
 	cargo test
+run:
+	make test
+	cargo run
