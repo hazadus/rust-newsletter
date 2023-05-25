@@ -1,4 +1,17 @@
+use newsletter::configuration::get_configuration;
+use sqlx::{Connection, PgConnection};
 use std::net::TcpListener;
+
+/// Launch the application in background.
+/// Bind TCP listener to random port, and return the address.
+fn spawn_app() -> String {
+    let listener = TcpListener::bind("127.0.0.1:0").expect("Failed to bind random port.");
+    let port = listener.local_addr().unwrap().port();
+    let server = newsletter::startup::run(listener).expect("Failed to bind address.");
+    let _ = tokio::spawn(server);
+
+    format!("http://127.0.0.1:{}", port)
+}
 
 /// Check that `/health_check` endpoint return `200 OK` with zero-length content.
 #[tokio::test]
@@ -16,20 +29,14 @@ async fn health_check_works() {
     assert_eq!(Some(0), response.content_length());
 }
 
-/// Launch the application in background.
-/// Bind TCP listener to random port, and return the address.
-fn spawn_app() -> String {
-    let listener = TcpListener::bind("127.0.0.1:0").expect("Failed to bind random port.");
-    let port = listener.local_addr().unwrap().port();
-    let server = newsletter::startup::run(listener).expect("Failed to bind address.");
-    let _ = tokio::spawn(server);
-
-    format!("http://127.0.0.1:{}", port)
-}
-
 #[tokio::test]
 async fn subscribe_return_200_for_valid_form_data() {
     let address = spawn_app();
+    let configuration = get_configuration().expect("Failed to read config file.");
+    let db_connection_string = configuration.database.connection_string();
+    let _connection = PgConnection::connect(&db_connection_string)
+        .await
+        .expect("Failed to connect to Postgres.");
     let client = reqwest::Client::new();
 
     let body = "name=hazadus&email=hazadus7%40gmail.com";

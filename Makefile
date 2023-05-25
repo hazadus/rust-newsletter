@@ -8,6 +8,7 @@ fmt:
 	cargo fmt
 test:
 	make fmt
+	./scripts/init_db.sh
 	cargo test
 run:
 	make test
