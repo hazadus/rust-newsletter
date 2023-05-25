@@ -5,6 +5,7 @@ Simple newsletter app, written in Rust.
 ## References
  - [Actix Documentation](https://actix.rs/docs)
  - [sqlx repo](https://github.com/launchbadge/sqlx)
+ - [Serde docs](https://serde.rs)
 
 ### Working with `sqlx`
 
