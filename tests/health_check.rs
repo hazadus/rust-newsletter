@@ -34,7 +34,7 @@ async fn subscribe_return_200_for_valid_form_data() {
     let address = spawn_app();
     let configuration = get_configuration().expect("Failed to read config file.");
     let db_connection_string = configuration.database.connection_string();
-    let _connection = PgConnection::connect(&db_connection_string)
+    let mut connection = PgConnection::connect(&db_connection_string)
         .await
         .expect("Failed to connect to Postgres.");
     let client = reqwest::Client::new();
@@ -49,6 +49,14 @@ async fn subscribe_return_200_for_valid_form_data() {
         .expect("Failed to execute request.");
 
     assert_eq!(200, response.status().as_u16());
+
+    let saved = sqlx::query!("SELECT email, name FROM subscriptions",)
+        .fetch_one(&mut connection)
+        .await
+        .expect("Failed to fetch saved subscription from database.");
+
+    assert_eq!(saved.email, "hazadus7@gmail.com");
+    assert_eq!(saved.name, "hazadus");
 }
 
 #[tokio::test]
