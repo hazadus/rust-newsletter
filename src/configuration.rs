@@ -21,6 +21,14 @@ impl DatabaseSettings {
             self.username, self.password, self.host, self.port, self.database_name,
         )
     }
+
+    /// Return DB connection string in Postgres format, without database name.
+    pub fn connection_string_without_db(&self) -> String {
+        format!(
+            "postgres://{}:{}@{}:{}",
+            self.username, self.password, self.host, self.port,
+        )
+    }
 }
 
 /// Load application configuration from config file and deserialize it.
