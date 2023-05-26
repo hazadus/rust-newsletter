@@ -1,4 +1,7 @@
 use actix_web::{web, HttpResponse};
+use chrono::Utc;
+use sqlx::PgPool;
+use uuid::Uuid;
 
 /// Form data shape for `subscribe` endpoint.
 #[derive(serde::Deserialize)]
@@ -16,8 +19,28 @@ pub struct FormData {
 ///
 /// If `Form::from_request` fails, a `400 BAD REQUEST` is returned to the caller. If it succeeds,
 /// `subscribe` is invoked and we return a `200 OK`.
-pub async fn subscribe(form: web::Form<FormData>) -> HttpResponse {
+///
+/// `pool` is retrieved from application state.
+pub async fn subscribe(form: web::Form<FormData>, pool: web::Data<PgPool>) -> HttpResponse {
     println!("Name: {}, email: {}", form.name, form.email);
 
-    HttpResponse::Ok().finish()
+    match sqlx::query!(
+        r#"
+        INSERT INTO subscriptions (id, email, name, subscribed_at)
+        VALUES ($1, $2, $3, $4)
+        "#,
+        Uuid::new_v4(),
+        form.email,
+        form.name,
+        Utc::now()
+    )
+    .execute(pool.get_ref())
+    .await
+    {
+        Ok(_) => HttpResponse::Ok().finish(),
+        Err(e) => {
+            println!("Failed to execute query: {}", e);
+            HttpResponse::InternalServerError().finish()
+        }
+    }
 }

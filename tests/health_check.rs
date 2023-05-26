@@ -1,26 +1,42 @@
 use newsletter::configuration::get_configuration;
-use sqlx::{Connection, PgConnection};
+use sqlx::{Connection, PgConnection, PgPool};
 use std::net::TcpListener;
+
+pub struct TestApp {
+    pub address: String,
+    pub db_pool: PgPool,
+}
 
 /// Launch the application in background.
 /// Bind TCP listener to random port, and return the address.
-fn spawn_app() -> String {
+async fn spawn_app() -> TestApp {
     let listener = TcpListener::bind("127.0.0.1:0").expect("Failed to bind random port.");
     let port = listener.local_addr().unwrap().port();
-    let server = newsletter::startup::run(listener).expect("Failed to bind address.");
+    let address = format!("http://127.0.0.1:{}", port);
+
+    let configuration = get_configuration().expect("Failed to read config file.");
+    let connection_pool = PgPool::connect(&configuration.database.connection_string())
+        .await
+        .expect("Failed to connect to Postgres.");
+
+    let server = newsletter::startup::run(listener, connection_pool.clone())
+        .expect("Failed to bind address.");
     let _ = tokio::spawn(server);
 
-    format!("http://127.0.0.1:{}", port)
+    TestApp {
+        address,
+        db_pool: connection_pool,
+    }
 }
 
 /// Check that `/health_check` endpoint return `200 OK` with zero-length content.
 #[tokio::test]
 async fn health_check_works() {
-    let address = spawn_app();
+    let app = spawn_app().await;
     let client = reqwest::Client::new();
 
     let response = client
-        .get(format!("{}/health_check", &address))
+        .get(format!("{}/health_check", &app.address))
         .send()
         .await
         .expect("Failed to send request.");
@@ -31,7 +47,7 @@ async fn health_check_works() {
 
 #[tokio::test]
 async fn subscribe_return_200_for_valid_form_data() {
-    let address = spawn_app();
+    let app = spawn_app().await;
     let configuration = get_configuration().expect("Failed to read config file.");
     let db_connection_string = configuration.database.connection_string();
     let mut connection = PgConnection::connect(&db_connection_string)
@@ -41,7 +57,7 @@ async fn subscribe_return_200_for_valid_form_data() {
 
     let body = "name=hazadus&email=hazadus7%40gmail.com";
     let response = client
-        .post(format!("{}/subscriptions", address))
+        .post(format!("{}/subscriptions", app.address))
         .header("Content-Type", "application/x-www-form-urlencoded")
         .body(body)
         .send()
@@ -61,7 +77,7 @@ async fn subscribe_return_200_for_valid_form_data() {
 
 #[tokio::test]
 async fn subscribe_return_400_for_missing_data() {
-    let address = spawn_app();
+    let app = spawn_app().await;
     let client = reqwest::Client::new();
     let test_cases = vec![
         ("name=hazadus", "missing the email"),
@@ -71,12 +87,13 @@ async fn subscribe_return_400_for_missing_data() {
 
     for (invalid_body, error_message) in test_cases {
         let response = client
-            .post(format!("{}/subscriptions", address))
+            .post(format!("{}/subscriptions", app.address))
             .header("Content-Type", "application/x-www-form-urlencoded")
             .body(invalid_body)
             .send()
             .await
             .expect("Failed to execute request.");
+
         assert_eq!(
             400,
             response.status().as_u16(),
