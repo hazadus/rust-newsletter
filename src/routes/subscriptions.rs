@@ -22,7 +22,14 @@ pub struct FormData {
 ///
 /// `pool` is retrieved from application state.
 pub async fn subscribe(form: web::Form<FormData>, pool: web::Data<PgPool>) -> HttpResponse {
-    println!("Name: {}, email: {}", form.name, form.email);
+    // We use UUID to correlate al log messages to the request.
+    let request_id = Uuid::new_v4();
+    tracing::info!(
+        "request_id {} - Saving new subscriber in DB: name: {}, email: {}",
+        request_id,
+        form.name,
+        form.email
+    );
 
     match sqlx::query!(
         r#"
@@ -37,9 +44,19 @@ pub async fn subscribe(form: web::Form<FormData>, pool: web::Data<PgPool>) -> Ht
     .execute(pool.get_ref())
     .await
     {
-        Ok(_) => HttpResponse::Ok().finish(),
+        Ok(_) => {
+            tracing::info!(
+                "request_id {} - New subscriber details have been saved.",
+                request_id
+            );
+            HttpResponse::Ok().finish()
+        }
         Err(e) => {
-            println!("Failed to execute query: {}", e);
+            tracing::error!(
+                "request_id {} - Failed to execute query: {:?}",
+                request_id,
+                e
+            );
             HttpResponse::InternalServerError().finish()
         }
     }
