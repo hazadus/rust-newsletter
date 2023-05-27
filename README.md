@@ -14,17 +14,6 @@ Base on Luca Palmieri's [awesome book](http://library.hazadus.ru/books/45/detail
  - [tracing_bunyan_formatter docs](https://docs.rs/tracing-bunyan-formatter/0.1.6/tracing_bunyan_formatter/)
  - [tracing_log docs](https://docs.rs/tracing-log/latest/tracing_log/)
 
-### Working with `sqlx`
-
-Install `sqlx-cli`:
-
-```bash
-# Note the version
-cargo install --version=0.5.7 sqlx-cli --no-default-features --features postgres
-# Check installation
-sqlx --help
-```
-
 ### Starting app in dev mode
 
 Run the PostgreSQL container and apply the migration:
@@ -40,3 +29,23 @@ cargo run
 ```
 
 Or, see `Makefile` for `make` commands.
+
+### Tooling
+
+#### Working with `sqlx`
+
+Install `sqlx-cli`:
+
+```bash
+# Note the version
+cargo install --version=0.5.7 sqlx-cli --no-default-features --features postgres
+# Check installation
+sqlx --help
+```
+
+#### Using `cargo-udeps`
+
+```bash
+cargo install cargo-udeps
+cargo +nightly udeps
+```
