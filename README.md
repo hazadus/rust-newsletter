@@ -13,6 +13,7 @@ Base on Luca Palmieri's [awesome book](http://library.hazadus.ru/books/45/detail
  - [tracing docs](https://docs.rs/tracing/latest/tracing/) - `tracing` is a framework for instrumenting Rust programs with context-aware, structured, event-based diagnostic information.
  - [tracing_bunyan_formatter docs](https://docs.rs/tracing-bunyan-formatter/0.1.6/tracing_bunyan_formatter/)
  - [tracing_log docs](https://docs.rs/tracing-log/latest/tracing_log/)
+ - [secrecy docs](https://docs.rs/secrecy/latest/secrecy/)
 
 ### Starting app in dev mode
 
