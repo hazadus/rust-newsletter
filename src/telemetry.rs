@@ -23,6 +23,7 @@ pub fn get_subscriber(name: String, env_filter: String) -> impl Subscriber + Sen
 }
 
 /// Register subscriber as global default to process span data.
+/// Should only be called **once** (in tests, too!).
 pub fn init_subscriber(subscriber: impl Subscriber + Send + Sync) {
     // Redirect all `log`'s events to our subscriber
     LogTracer::init().expect("Failed to set logger.");

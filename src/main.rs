@@ -1,8 +1,8 @@
 use newsletter::configuration::get_configuration;
 use newsletter::startup::run;
+use newsletter::telemetry::{get_subscriber, init_subscriber};
 use sqlx::PgPool;
 use std::net::TcpListener;
-use newsletter::telemetry::{get_subscriber, init_subscriber};
 
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
