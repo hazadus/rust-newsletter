@@ -9,7 +9,9 @@ pub struct TestApp {
 }
 
 /// Launch the application in background.
-/// Bind TCP listener to random port, and return the address.
+/// Bind TCP listener to random port.
+/// Create new database with random name to isolate test runs.
+/// Return `TestApp` including server address and database connection pool.
 async fn spawn_app() -> TestApp {
     let listener = TcpListener::bind("127.0.0.1:0").expect("Failed to bind random port.");
     let port = listener.local_addr().unwrap().port();
@@ -79,14 +81,11 @@ async fn health_check_works() {
     assert_eq!(Some(0), response.content_length());
 }
 
+/// Check that `/subscriptions` endpoint returns `200 OK` when valid form data was posted
+/// and the data is properly saved in database.
 #[tokio::test]
-async fn subscribe_return_200_for_valid_form_data() {
+async fn subscribe_return_200_for_valid_form_and_data_properly_saved() {
     let app = spawn_app().await;
-    let configuration = get_configuration().expect("Failed to read config file.");
-    let db_connection_string = configuration.database.connection_string();
-    let mut connection = PgConnection::connect(&db_connection_string)
-        .await
-        .expect("Failed to connect to Postgres.");
     let client = reqwest::Client::new();
 
     let body = "name=hazadus&email=hazadus7%40gmail.com";
@@ -101,7 +100,7 @@ async fn subscribe_return_200_for_valid_form_data() {
     assert_eq!(200, response.status().as_u16());
 
     let saved = sqlx::query!("SELECT email, name FROM subscriptions",)
-        .fetch_one(&mut connection)
+        .fetch_one(&app.db_pool)
         .await
         .expect("Failed to fetch saved subscription from database.");
 
@@ -109,6 +108,7 @@ async fn subscribe_return_200_for_valid_form_data() {
     assert_eq!(saved.name, "hazadus");
 }
 
+/// Check that `/subscriptions` endpoint returns `400 BAD REQUEST` when invalid data was posted.
 #[tokio::test]
 async fn subscribe_return_400_for_missing_data() {
     let app = spawn_app().await;
