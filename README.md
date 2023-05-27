@@ -30,6 +30,13 @@ cargo run
 
 Or, see `Makefile` for `make` commands.
 
+### Tests
+
+```bash
+./scripts/init_db.sh
+TEST_LOG=true cargo test | bunyan
+```
+
 ### Tooling
 
 #### Working with `sqlx`
@@ -48,4 +55,11 @@ sqlx --help
 ```bash
 cargo install cargo-udeps
 cargo +nightly udeps
+```
+
+#### Test logs pretty print
+
+```bash
+cargo install bunyan
+TEST_LOG=true cargo test | bunyan
 ```
