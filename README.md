@@ -14,6 +14,7 @@ Base on Luca Palmieri's [awesome book](http://library.hazadus.ru/books/45/detail
  - [tracing_bunyan_formatter docs](https://docs.rs/tracing-bunyan-formatter/0.1.6/tracing_bunyan_formatter/)
  - [tracing_log docs](https://docs.rs/tracing-log/latest/tracing_log/)
  - [secrecy docs](https://docs.rs/secrecy/latest/secrecy/)
+ - [tracing-actix-web](https://github.com/LukeMathWalker/tracing-actix-web/tree/main)
 
 ### Starting app in dev mode
 

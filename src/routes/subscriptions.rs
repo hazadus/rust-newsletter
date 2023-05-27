@@ -28,8 +28,6 @@ pub struct FormData {
     name = "Adding a new subscriber",
     skip(form, pool),
     fields(
-        // We use UUID to correlate all log messages to the request.
-        request_id = %Uuid::new_v4(),
         subscriber_name = %form.name,
         subscriber_email =  %form.email
     )
