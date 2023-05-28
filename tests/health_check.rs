@@ -1,4 +1,5 @@
-use newsletter::configuration::{configure_database, get_configuration};
+use newsletter::configuration::get_configuration;
+use newsletter::database::configure_database;
 use newsletter::telemetry::{get_subscriber, init_subscriber};
 use once_cell::sync::Lazy;
 use sqlx::PgPool;

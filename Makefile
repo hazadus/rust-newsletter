@@ -6,6 +6,7 @@ expand:
 	cargo +nightly expand
 fmt:
 	cargo fmt
+	cargo clippy -- -D warnings
 prepare:
 	cargo sqlx prepare -- --lib
 test:
