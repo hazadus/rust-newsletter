@@ -1,7 +1,7 @@
 use newsletter::configuration::get_configuration;
 use newsletter::startup::run;
 use newsletter::telemetry::{get_subscriber, init_subscriber};
-use sqlx::PgPool;
+use sqlx::postgres::PgPoolOptions;
 use std::net::TcpListener;
 
 #[tokio::main]
@@ -11,8 +11,9 @@ async fn main() -> std::io::Result<()> {
 
     // Panic if we can't read config file
     let configuration = get_configuration().expect("Failed to read config file.");
-    let connection_pool = PgPool::connect_lazy(&configuration.database.connection_string())
-        .expect("Failed to connect to Postgres.");
+    let connection_pool = PgPoolOptions::new()
+        .connect_timeout(std::time::Duration::from_secs(5))
+        .connect_lazy_with(configuration.database.with_db());
     let address = format!(
         "{}:{}",
         configuration.application.host, configuration.application.port
