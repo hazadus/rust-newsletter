@@ -15,6 +15,7 @@ Base on Luca Palmieri's [awesome book](http://library.hazadus.ru/books/45/detail
  - [tracing_log docs](https://docs.rs/tracing-log/latest/tracing_log/)
  - [secrecy docs](https://docs.rs/secrecy/latest/secrecy/)
  - [tracing-actix-web](https://github.com/LukeMathWalker/tracing-actix-web/tree/main)
+ - [cargo-chef](https://github.com/LukeMathWalker/cargo-chef)
 
 ### Starting app in dev mode
 
@@ -48,6 +49,9 @@ docker build --tag newsletter --file Dockerfile .
 docker run -p 8000:8000 newsletter
 # Check it is working:
 curl -v http://127.0.0.1:8000/health_check
+# Push image to the Docker Hub:
+docker tag newsletter hazadus/rust-newsletter
+docker push hazadus/rust-newsletter
 ```
 
 #### Working with `sqlx`
