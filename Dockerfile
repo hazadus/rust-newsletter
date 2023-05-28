@@ -1,5 +1,5 @@
 # We use the latest Rust stable release as base image
-FROM rust:1.69.0
+FROM rust:1.69.0 AS builder
 # Let's switch our working directory to `app` (equivalent to `cd app`)
 # The `app` folder will be created for us by Docker in case it does not
 # exist already.
@@ -13,6 +13,23 @@ ENV SQLX_OFFLINE true
 # Let's build our binary!
 # We'll use the release profile to make it faaaast
 RUN cargo build --release
+
+# Runtime stage
+FROM debian:bullseye-slim AS runtime
+WORKDIR /app
+# Install OpenSSL - it is dynamically linked by some of our dependencies
+# Install ca-certificates - it is needed to verify TLS certificates
+# when establishing HTTPS connections
+RUN apt-get update -y \
+  && apt-get install -y --no-install-recommends openssl ca-certificates \
+  # Clean up
+  && apt-get autoremove -y \
+  && apt-get clean -y \
+  && rm -rf /var/lib/apt/lists/*
+# Copy the compiled binary from the builder environment to the runtime environment
+COPY --from=builder /app/target/release/newsletter newsletter
+# We'll need the configuration at runtime
+COPY configuration configuration
 # When `docker run` is executed, launch the binary!
 ENV APP_ENVIRONMENT production
-ENTRYPOINT ["./target/release/newsletter"]
+ENTRYPOINT ["./newsletter"]
