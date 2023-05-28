@@ -50,6 +50,8 @@ Install `sqlx-cli`:
 cargo install --version=0.5.7 sqlx-cli --no-default-features --features postgres
 # Check installation
 sqlx --help
+# Prepare offline DB data
+cargo sqlx prepare -- --lib
 ```
 
 #### Using `cargo-udeps`
