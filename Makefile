@@ -6,6 +6,7 @@ expand:
 	cargo +nightly expand
 fmt:
 	cargo fmt
+	cargo clippy -- -D warnings
 prepare:
 	cargo sqlx prepare -- --lib
 test:
@@ -14,3 +15,7 @@ test:
 run:
 	make test
 	cargo run
+up:
+	make prepare
+	make test
+	docker compose up --build
