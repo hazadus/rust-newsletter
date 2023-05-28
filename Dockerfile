@@ -25,5 +25,8 @@ RUN apt-get update -y \
     && rm -rf /var/lib/apt/lists/*
 COPY --from=builder /app/target/release/newsletter newsletter
 COPY configuration configuration
+COPY scripts/wait_for_it.sh wait_for_it.sh
+RUN chmod a+x wait_for_it.sh
 ENV APP_ENVIRONMENT production
-ENTRYPOINT ["./newsletter"]
+# Make sure the DB server is up and ready before starting the app:
+ENTRYPOINT ["./wait_for_it.sh", "db:5432", "--", "./newsletter"]

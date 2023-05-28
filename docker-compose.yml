@@ -12,5 +12,7 @@ services:
     build: .
     ports:
       - "8000:8000"
+    environment:
+      - "APP_ENVIRONMENT=production"
     depends_on:
       - db

@@ -14,3 +14,7 @@ test:
 run:
 	make test
 	cargo run
+up:
+	make prepare
+	make test
+	docker compose up --build

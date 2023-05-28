@@ -14,5 +14,25 @@
       }
     },
     "query": "\n        INSERT INTO subscriptions (id, email, name, subscribed_at)\n        VALUES ($1, $2, $3, $4)\n        "
+  },
+  "e75d063ff667e02fbb3679e100b60d8eef3fe4b24216e5d2fa1604e8d194843b": {
+    "describe": {
+      "columns": [
+        {
+          "name": "count",
+          "ordinal": 0,
+          "type_info": "Int8"
+        }
+      ],
+      "nullable": [
+        null
+      ],
+      "parameters": {
+        "Left": [
+          "Name"
+        ]
+      }
+    },
+    "query": "\n        SELECT COUNT(*) AS count FROM pg_database WHERE datname = $1;\n        "
   }
 }
