@@ -41,6 +41,15 @@ TEST_LOG=true cargo test | bunyan
 
 ### Tooling
 
+#### Docker
+
+```bash
+docker build --tag newsletter --file Dockerfile .
+docker run -p 8000:8000 newsletter
+# Check it is working:
+curl -v http://127.0.0.1:8000/health_check
+```
+
 #### Working with `sqlx`
 
 Install `sqlx-cli`:
@@ -52,6 +61,8 @@ cargo install --version=0.5.7 sqlx-cli --no-default-features --features postgres
 sqlx --help
 # Prepare offline DB data
 cargo sqlx prepare -- --lib
+# Check offline data
+cargo sqlx prepare --check -- --bin newsletter
 ```
 
 #### Using `cargo-udeps`
