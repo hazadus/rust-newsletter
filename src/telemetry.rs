@@ -1,3 +1,4 @@
+//! Functions related to application state tracing.
 use tracing::subscriber::set_global_default;
 use tracing::Subscriber;
 use tracing_bunyan_formatter::{BunyanFormattingLayer, JsonStorageLayer};

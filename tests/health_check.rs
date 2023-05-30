@@ -1,3 +1,4 @@
+//! Includes all integration tests.
 use newsletter::configuration::get_configuration;
 use newsletter::database::configure_database;
 use newsletter::telemetry::{get_subscriber, init_subscriber};

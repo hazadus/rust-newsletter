@@ -1,4 +1,4 @@
-//? Database related stuff
+//! Database related stuff.
 use crate::configuration::DatabaseSettings;
 use sqlx::{Connection, Executor, PgConnection, PgPool};
 
