@@ -14,7 +14,7 @@ pub struct FormData {
     name: String,
 }
 
-/// Add new subscriber to database using passed `FormData`.
+/// Add new subscriber to database using validated `FormData`.
 // Before calling `subscribe` actix-web invokes the `from_request` method for all subscribe’s
 // input arguments: in our case, `Form::from_request`;
 //
@@ -35,10 +35,17 @@ pub struct FormData {
     )
 )]
 pub async fn subscribe(form: web::Form<FormData>, pool: web::Data<PgPool>) -> HttpResponse {
+    let name = match SubscriberName::parse(form.0.name) {
+        Ok(name) => name,
+        Err(_) => return HttpResponse::BadRequest().finish(),
+    };
+
     let new_subscriber = NewSubscriber {
         email: form.0.email,
-        name: SubscriberName::parse(form.0.name).expect("Name validation failed."),
+        // NB: this is shorthand for `name: name`:
+        name,
     };
+
     match insert_subscriber(&pool, &new_subscriber).await {
         Ok(_) => HttpResponse::Ok().finish(),
         Err(_) => HttpResponse::InternalServerError().finish(),
