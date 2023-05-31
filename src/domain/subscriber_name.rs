@@ -7,7 +7,7 @@ pub struct SubscriberName(String);
 
 impl SubscriberName {
     /// Return an instance of `SubscriberName` if the input satisfies all validation constraints.
-    /// Panic otherwise.
+    /// Return an `Err` otherwise.
     pub fn parse(s: String) -> Result<SubscriberName, String> {
         let is_empty_or_whitespace = s.trim().is_empty();
 
