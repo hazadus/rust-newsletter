@@ -1,10 +1,5 @@
-//! Contains domain-specific types of the application, and corresponding unit tests.
+//! Contains domain-specific `SubscriberName` type, and corresponding unit tests.
 use unicode_segmentation::UnicodeSegmentation;
-
-pub struct NewSubscriber {
-    pub email: String,
-    pub name: SubscriberName,
-}
 
 /// Represents validated subscriber name.
 #[derive(Debug)]
