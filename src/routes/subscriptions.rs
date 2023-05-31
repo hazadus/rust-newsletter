@@ -14,6 +14,19 @@ pub struct FormData {
     name: String,
 }
 
+impl TryFrom<FormData> for NewSubscriber {
+    type Error = String;
+
+    /// Convert `FormData` to our domain-specific type `NewSubscriber`.
+    // NB: If you provide a `TryFrom` implementation, your type automatically gets the corresponding
+    // `TryInto` implementation, for free.
+    fn try_from(value: FormData) -> Result<Self, Self::Error> {
+        let name = SubscriberName::parse(value.name)?;
+        let email = SubscriberEmail::parse(value.email)?;
+        Ok(Self { email, name })
+    }
+}
+
 /// Add new subscriber to database using validated `FormData`.
 // Before calling `subscribe` actix-web invokes the `from_request` method for all subscribe’s
 // input arguments: in our case, `Form::from_request`;
@@ -35,20 +48,9 @@ pub struct FormData {
     )
 )]
 pub async fn subscribe(form: web::Form<FormData>, pool: web::Data<PgPool>) -> HttpResponse {
-    let name = match SubscriberName::parse(form.0.name) {
-        Ok(name) => name,
+    let new_subscriber: NewSubscriber = match form.0.try_into() {
+        Ok(form) => form,
         Err(_) => return HttpResponse::BadRequest().finish(),
-    };
-
-    let email = match SubscriberEmail::parse(form.0.email) {
-        Ok(email) => email,
-        Err(_) => return HttpResponse::BadRequest().finish(),
-    };
-
-    let new_subscriber = NewSubscriber {
-        // NB: this is shorthand for `email: email, name: name,`:
-        email,
-        name,
     };
 
     match insert_subscriber(&pool, &new_subscriber).await {
