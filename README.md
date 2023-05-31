@@ -16,6 +16,9 @@ Base on Luca Palmieri's [awesome book](http://library.hazadus.ru/books/45/detail
  - [secrecy docs](https://docs.rs/secrecy/latest/secrecy/)
  - [tracing-actix-web](https://github.com/LukeMathWalker/tracing-actix-web/tree/main)
  - [cargo-chef](https://github.com/LukeMathWalker/cargo-chef)
+ - [validator](https://crates.io/crates/validator)
+ - [fake](https://crates.io/crates/fake)
+ - [quickcheck](https://crates.io/crates/quickcheck)
 
 ### Starting app in dev mode
 

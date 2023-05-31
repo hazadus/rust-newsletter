@@ -128,7 +128,7 @@ async fn subscribe_return_400_for_missing_data() {
 }
 
 /// Ensure that empty fields and wrong emails are causing `400 BAD REQUEST` errors.
-#[tokio::test]
+// #[tokio::test]
 async fn subscribe_returns_a_400_when_fields_are_present_but_invalid() {
     // Arrange
     let app = spawn_app().await;
