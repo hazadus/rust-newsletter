@@ -8,6 +8,7 @@ Base on Luca Palmieri's [awesome book](http://library.hazadus.ru/books/45/detail
  - [Actix Documentation](https://actix.rs/docs)
  - [sqlx repo](https://github.com/launchbadge/sqlx)
  - [Serde docs](https://serde.rs)
+ - [reqwest](https://crates.io/crates/reqwest)
  - [env_logger docs](https://docs.rs/env_logger/latest/env_logger/)
  - [log docs](https://docs.rs/log/latest/log/)
  - [tracing docs](https://docs.rs/tracing/latest/tracing/) - `tracing` is a framework for instrumenting Rust programs with context-aware, structured, event-based diagnostic information.
