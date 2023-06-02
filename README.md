@@ -20,6 +20,7 @@ Base on Luca Palmieri's [awesome book](http://library.hazadus.ru/books/45/detail
  - [validator](https://crates.io/crates/validator)
  - [fake](https://crates.io/crates/fake)
  - [quickcheck](https://crates.io/crates/quickcheck)
+ - [wiremock-rs](https://github.com/LukeMathWalker/wiremock-rs)
 
 ### Starting app in dev mode
 
