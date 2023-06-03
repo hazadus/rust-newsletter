@@ -21,6 +21,7 @@ Base on Luca Palmieri's [awesome book](http://library.hazadus.ru/books/45/detail
  - [fake](https://crates.io/crates/fake)
  - [quickcheck](https://crates.io/crates/quickcheck)
  - [wiremock-rs](https://github.com/LukeMathWalker/wiremock-rs)
+ - [Postmark API Reference - Sending a single email](https://postmarkapp.com/developer/user-guide/send-email-with-api#send-a-single-email)
 
 ### Starting app in dev mode
 
