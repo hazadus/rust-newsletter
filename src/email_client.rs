@@ -71,7 +71,7 @@ mod tests {
     use fake::faker::lorem::en::{Paragraph, Sentence};
     use fake::{Fake, Faker};
     use secrecy::Secret;
-    use wiremock::matchers::any;
+    use wiremock::matchers::{header, header_exists, method, path};
     use wiremock::{Mock, MockServer, ResponseTemplate};
 
     #[tokio::test]
@@ -87,7 +87,10 @@ mod tests {
             Secret::new(Faker.fake()),
         );
 
-        Mock::given(any()) // on any request...
+        Mock::given(header_exists("X-Postmark-Server-Token"))
+            .and(header("Content-Type", "application/json"))
+            .and(path("/email"))
+            .and(method("POST"))
             .respond_with(ResponseTemplate::new(200)) // respond with `200 OK`
             .expect(1) // NB: Not the same as `expect()` on `Result`
             .mount(&mock_server)

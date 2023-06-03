@@ -10,3 +10,4 @@ email_client:
   base_url: "https://api.postmarkapp.com"
   # "Single sender email" authorised on Postmark
   sender_email: "hazadus@hazadus.ru"
+  authorization_token: "auth-token"
