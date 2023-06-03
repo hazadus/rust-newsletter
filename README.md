@@ -1,8 +1,10 @@
 # rust-newsletter
 
+[![Rust](https://github.com/hazadus/rust-newsletter/actions/workflows/general.yml/badge.svg?branch=master)](https://github.com/hazadus/rust-newsletter/actions/workflows/general.yml)
+
 Simple newsletter app, written in Rust.
 
-Base on Luca Palmieri's [awesome book](http://library.hazadus.ru/books/45/details/).
+Based on Luca Palmieri's [awesome book](http://library.hazadus.ru/books/45/details/) with some improvements.
 
 ## References
  - [Actix Documentation](https://actix.rs/docs)

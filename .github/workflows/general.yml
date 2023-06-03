@@ -1,6 +1,6 @@
 # https://github.com/LukeMathWalker/zero-to-production/blob/root-chapter-03-part1/.github/workflows/general.yml
 # The name of your workflow. GitHub displays the names of your workflows on your repository's "Actions" tab
-name: Rust
+name: Tests | fmt | Clippy
 
 # To automatically trigger the workflow
 on: [push, pull_request]
@@ -15,8 +15,8 @@ env:
 jobs:
   # Unique identifier of our job (`job_id`)
   test:
-    # Sets the name `Test` for the job, which is displayed in the GitHub UI
-    name: Test
+    # Sets the name `Tests` for the job, which is displayed in the GitHub UI
+    name: Tests
     # Containers must run in Linux based operating systems
     runs-on: ubuntu-latest
     # Service containers to run with the `test` container job

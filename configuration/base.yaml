@@ -11,3 +11,4 @@ email_client:
   # "Single sender email" authorised on Postmark
   sender_email: "hazadus@hazadus.ru"
   authorization_token: "auth-token"
+  timeout_milliseconds: 10000
