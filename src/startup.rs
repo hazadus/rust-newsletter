@@ -1,4 +1,4 @@
-//! Contains `run()` function used to create HTTP `Server` instance.
+//! Contains `build()` and `run()` functions used to create HTTP `Server` instance.
 use crate::configuration::Settings;
 use crate::email_client::EmailClient;
 use crate::routes::{health_check, subscribe};
@@ -9,6 +9,7 @@ use sqlx::PgPool;
 use std::net::TcpListener;
 use tracing_actix_web::TracingLogger;
 
+/// Prepare all the stuff, then call `run()` to create the `Server`.
 pub async fn build(configuration: Settings) -> Result<Server, std::io::Error> {
     let connection_pool = PgPoolOptions::new()
         .connect_timeout(std::time::Duration::from_secs(5))
