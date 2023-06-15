@@ -10,7 +10,7 @@ async fn subscribe_return_200_for_valid_form_and_data_properly_saved() {
 
     let body = "name=hazadus&email=hazadus7%40gmail.com";
     let response = client
-        .post(format!("{}/subscriptions", app.address))
+        .post(&format!("{}/subscriptions", &app.address))
         .header("Content-Type", "application/x-www-form-urlencoded")
         .body(body)
         .send()

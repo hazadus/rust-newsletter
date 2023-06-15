@@ -1,6 +1,5 @@
 use newsletter::configuration::get_configuration;
-use newsletter::database::configure_db_if_not_exists;
-use newsletter::startup::build;
+use newsletter::startup::Application;
 use newsletter::telemetry::{get_subscriber, init_subscriber};
 
 #[tokio::main]
@@ -11,10 +10,8 @@ async fn main() -> std::io::Result<()> {
     // Panic if we can't read config file
     let configuration = get_configuration().expect("Failed to read config file.");
 
-    configure_db_if_not_exists(&configuration.database).await;
-
-    let server = build(configuration).await?;
-    server.await?;
+    let application = Application::build(configuration).await?;
+    application.run_until_stopped().await?;
 
     Ok(())
 }
